@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -529,6 +530,7 @@ int main(int argc, char **argv)
     cin >> NumOfCase;
     for (int c = 0; c < NumOfCase; ++c)
     {
+        auto start = std::chrono::high_resolution_clock::now();
         //Input
         PrimitiveVar Wl(cin), Wr(cin);
         int NumOfStep;
@@ -619,6 +621,9 @@ int main(int argc, char **argv)
             swap(PREV, CUR);
         }
         fout.close();
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        cout << "time= " << duration.count() << " ms\n";
     }
 
     return 0;
