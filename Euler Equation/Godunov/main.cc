@@ -179,6 +179,40 @@ inline double newton_raphson(
     return p0;
 }
 
+inline double newton_raphson(
+    const double p_guess,
+    const PrimitiveVar &Wl,
+    const PrimitiveVar &Wr,
+    double (*f)(double, const PrimitiveVar&, const PrimitiveVar&),
+    double (*df)(double, const PrimitiveVar&, const PrimitiveVar&)
+)
+{
+    double p0 = p_guess;
+    int iter_cnt = 0;
+    double CHA = 1.0;
+    const double TOL = 1e-6;
+    while (CHA > TOL)
+    {
+        ++iter_cnt;
+
+        double fder = df(p0, Wl, Wr);
+        if (fder == 0)
+            throw "Zero derivative!";
+
+        double fval = f(p0, Wl, Wr);
+        double p = p0 - fval / fder;
+        if (p < 0)
+        {
+            p0 = TOL;
+            break;
+        }
+
+        CHA = abs(2 * (p - p0) / (p + p0));
+        p0 = p;
+    }
+    return p0;
+}
+
 //Exact solution of then 1-D Euler equation
 //This is the Riemann problem, where initial discontinuity exists
 double p_star(const PrimitiveVar &Wl, const PrimitiveVar &Wr)
@@ -212,7 +246,7 @@ double p_star(const PrimitiveVar &Wl, const PrimitiveVar &Wr)
     else
         p0 = p_pv;
 
-    return newton_raphson(p0,Wl,Wr,f,df,ddf);
+    return newton_raphson(p0,Wl,Wr,f,df);
 }
 
 inline double u_star(double p, const PrimitiveVar &Wl, const PrimitiveVar &Wr)
