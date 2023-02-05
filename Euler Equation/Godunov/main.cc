@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <cmath>
@@ -534,6 +535,10 @@ int main(int argc, char **argv)
         ofstream fout(header);
         if (!fout)
             throw "Failed to open file!";
+
+		cout.fill('=');
+		cout << setw(32) << std::right << header << setw(32) << std::right << "" << endl;
+		cout.fill(' ');
 
         //Output coordinates and intial settings
         fout << NumOfStep << '\t' << NumOfPnt << endl;
